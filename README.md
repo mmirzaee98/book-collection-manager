@@ -1,4 +1,13 @@
 Update README with project details
+
+## Project Setup and Running
+
+1. **Install Dependencies**  
+   ```bash
+   npm install
+npm run serve-json
+npm run dev
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
