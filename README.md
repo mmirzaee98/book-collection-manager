@@ -1,5 +1,11 @@
 Update README with project details
 
+- Added a new section "Project Setup and Running"
+- Provided steps for npm install, npm run serve-json, and npm run dev
+- Clarified that the JSON server runs on port 4000
+- Mentioned that the Next.js app runs on port 3000
+
+
 ## Project Setup and Running
 
 1. **Install Dependencies**  
