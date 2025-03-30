@@ -11,16 +11,18 @@ export default function EditBookForm({ book }) {
   const [errors, setErrors] = useState([]);
   const router = useRouter();
 
+  // Example validation
   const validate = () => {
     const errs = [];
     if (title.length < 3 || title.length > 50) {
-      errs.push("Title must be between 3 and 50 characters.");
+      errs.push("Title must be 3-50 characters.");
     }
     if (author.length < 3 || author.length > 50) {
-      errs.push("Author must be between 3 and 50 characters.");
+      errs.push("Author must be 3-50 characters.");
     }
-    if (publicationYear < 1500 || publicationYear > new Date().getFullYear()) {
-      errs.push("Publication year must be valid.");
+    const year = new Date().getFullYear();
+    if (publicationYear < 1500 || publicationYear > year) {
+      errs.push("Publication year is invalid.");
     }
     return errs;
   };
@@ -32,19 +34,19 @@ export default function EditBookForm({ book }) {
       setErrors(errs);
       return;
     }
-    // If valid, send PUT request to update the book
+    // If valid, send PUT request
     const response = await fetch(`http://localhost:4000/books/${book.id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        id: book.id, // usually the id stays the same
-        title,
-        author,
-        publicationYear,
-      })
+      body: JSON.stringify({ 
+        id: book.id, 
+        title, 
+        author, 
+        publicationYear 
+      }),
     });
     if (response.ok) {
-      router.push("/admin");
+      router.push("/admin"); // Go back to admin dashboard
     } else {
       setErrors(["Failed to update the book."]);
     }
@@ -58,15 +60,15 @@ export default function EditBookForm({ book }) {
         </ul>
       )}
       <div>
-        <label>Title:</label>
+        <label>Title: </label>
         <input value={title} onChange={(e) => setTitle(e.target.value)} />
       </div>
       <div>
-        <label>Author:</label>
+        <label>Author: </label>
         <input value={author} onChange={(e) => setAuthor(e.target.value)} />
       </div>
       <div>
-        <label>Publication Year:</label>
+        <label>Publication Year: </label>
         <input
           type="number"
           value={publicationYear}

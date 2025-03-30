@@ -1,21 +1,16 @@
-// components/AdminTable.jsx
-"use client";  // This must be the very first line
+// components/AdminTable.jsx (client or server depending on your approach)
+"use client"; // If you want to handle onClick delete
 
-import { useState } from "react";
+import Link from "next/link";
 
-export default function AdminTable({ books }) {
-  // Now you can safely use onClick in this component
-  async function deleteBook(id) {
-    await fetch(`http://localhost:4000/books/${id}`, { method: "DELETE" });
-    // Update state or re-fetch to refresh the UI
-  }
-
+export default function AdminTable({ books = [] }) {
   return (
     <table>
       <thead>
         <tr>
           <th>Title</th>
           <th>Delete</th>
+          <th>Edit</th>
         </tr>
       </thead>
       <tbody>
@@ -23,7 +18,10 @@ export default function AdminTable({ books }) {
           <tr key={book.id}>
             <td>{book.title}</td>
             <td>
-              <button onClick={() => deleteBook(book.id)}>Delete</button>
+              <button>Delete</button>
+            </td>
+            <td>
+              <Link href={`/admin/edit/${book.id}`}>Edit</Link>
             </td>
           </tr>
         ))}

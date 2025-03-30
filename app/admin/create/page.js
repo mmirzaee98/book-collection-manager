@@ -1,40 +1,28 @@
-// app/admin/AdminTable.jsx
-"use client";
-import { useState } from "react";
+// app/admin/create/page.js
+import AdminTable from "../../../components/AdminTable";
+import { redirect } from "next/navigation";
 
-export default function AdminTable({ initialBooks }) {
-  const [books, setBooks] = useState(initialBooks);
+export async function createBook(formData) {
+  "use server";
+  // ... code to POST a new book ...
+  redirect("/admin");
+}
 
-  async function handleDelete(id) {
-    await fetch(`http://localhost:4000/books/${id}`, { method: "DELETE" });
-    // Filter out the deleted book from local state so the UI updates
-    setBooks((prev) => prev.filter((book) => book.id !== id));
-  }
+export default async function CreatePage() {
+  // 1. Fetch books from JSON server
+  const res = await fetch("http://localhost:4000/books");
+  const books = await res.json();
 
+  // 2. Pass books as a prop to AdminTable
   return (
-    <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Title</th>
-          <th>Author</th>
-          <th>Year</th>
-          <th>Delete</th>
-        </tr>
-      </thead>
-      <tbody>
-        {books.map((book) => (
-          <tr key={book.id}>
-            <td>{book.id}</td>
-            <td>{book.title}</td>
-            <td>{book.author}</td>
-            <td>{book.publicationYear}</td>
-            <td>
-              <button onClick={() => handleDelete(book.id)}>Delete</button>
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <div>
+      <h1>Create New Book</h1>
+      <form action={createBook}>
+        <input name="title" placeholder="Book Title" />
+        <button type="submit">Submit</button>
+      </form>
+      <h2>Current Books</h2>
+      <AdminTable books={books} />
+    </div>
   );
 }
