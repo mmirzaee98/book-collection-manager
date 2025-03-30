@@ -1,4 +1,5 @@
 // app/admin/page.js
+import AdminTable from "../../components/AdminTable";
 import Link from "next/link";
 
 export default async function AdminPage() {
@@ -6,33 +7,14 @@ export default async function AdminPage() {
   const books = await res.json();
 
   return (
-    <div className="adminContainer">
-      <div className="adminHeader">
+    <div style={{ width: "80%", margin: "2rem auto", backgroundColor: "#fff", padding: "1rem", boxShadow: "0 2px 5px rgba(0,0,0,0.1)" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <h1>Admin Dashboard</h1>
-        <Link href="/admin/create" className="createButton">Create New Book</Link>
+        <Link href="/admin/create" style={{ backgroundColor: "#0070f3", color: "#fff", padding: "0.5rem 1rem", textDecoration: "none", borderRadius: "4px" }}>
+          Create New Book
+        </Link>
       </div>
-      <table>
-        <thead>
-          <tr>
-            <th>Title</th>
-            <th>Delete</th>
-            <th>Edit</th>
-          </tr>
-        </thead>
-        <tbody>
-          {books.map((book) => (
-            <tr key={book.id}>
-              <td>{book.title}</td>
-              <td>
-                <button>Delete</button>
-              </td>
-              <td>
-                <Link href={`/admin/edit/${book.id}`}>Edit</Link>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <AdminTable initialBooks={books} />
     </div>
   );
 }

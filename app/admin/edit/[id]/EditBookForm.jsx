@@ -1,4 +1,3 @@
-// app/admin/edit/[id]/EditBookForm.jsx
 "use client";
 
 import { useState } from "react";
@@ -11,70 +10,58 @@ export default function EditBookForm({ book }) {
   const [errors, setErrors] = useState([]);
   const router = useRouter();
 
-  // Example validation
-  const validate = () => {
-    const errs = [];
-    if (title.length < 3 || title.length > 50) {
-      errs.push("Title must be 3-50 characters.");
-    }
-    if (author.length < 3 || author.length > 50) {
-      errs.push("Author must be 3-50 characters.");
-    }
-    const year = new Date().getFullYear();
-    if (publicationYear < 1500 || publicationYear > year) {
-      errs.push("Publication year is invalid.");
-    }
-    return errs;
-  };
-
-  const handleSubmit = async (e) => {
+  // Define the handleSubmit function
+  async function handleSubmit(e) {
     e.preventDefault();
-    const errs = validate();
-    if (errs.length > 0) {
-      setErrors(errs);
+
+    // Example validation
+    if (title.length < 3) {
+      setErrors(["Title must be at least 3 characters."]);
       return;
     }
-    // If valid, send PUT request
-    const response = await fetch(`http://localhost:4000/books/${book.id}`, {
+
+    // PUT request to update the book
+    await fetch(`http://localhost:4000/books/${book.id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ 
-        id: book.id, 
-        title, 
-        author, 
-        publicationYear 
+      body: JSON.stringify({
+        id: book.id,
+        title,
+        author,
+        publicationYear,
       }),
     });
-    if (response.ok) {
-      router.push("/admin"); // Go back to admin dashboard
-    } else {
-      setErrors(["Failed to update the book."]);
-    }
-  };
+    router.push("/admin");
+  }
 
   return (
     <form onSubmit={handleSubmit}>
+      {/* If you have errors, display them */}
       {errors.length > 0 && (
         <ul style={{ color: "red" }}>
-          {errors.map((err, idx) => <li key={idx}>{err}</li>)}
+          {errors.map((err, i) => <li key={i}>{err}</li>)}
         </ul>
       )}
-      <div>
-        <label>Title: </label>
-        <input value={title} onChange={(e) => setTitle(e.target.value)} />
-      </div>
-      <div>
-        <label>Author: </label>
-        <input value={author} onChange={(e) => setAuthor(e.target.value)} />
-      </div>
-      <div>
-        <label>Publication Year: </label>
-        <input
-          type="number"
-          value={publicationYear}
-          onChange={(e) => setPublicationYear(Number(e.target.value))}
-        />
-      </div>
+
+      <label>Title</label>
+      <input
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+      />
+
+      <label>Author</label>
+      <input
+        value={author}
+        onChange={(e) => setAuthor(e.target.value)}
+      />
+
+      <label>Publication Year</label>
+      <input
+        type="number"
+        value={publicationYear}
+        onChange={(e) => setPublicationYear(Number(e.target.value))}
+      />
+
       <button type="submit">Update Book</button>
     </form>
   );
