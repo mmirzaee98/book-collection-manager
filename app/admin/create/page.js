@@ -1,36 +1,40 @@
-import { redirect } from "next/navigation";
+// app/admin/AdminTable.jsx
+"use client";
+import { useState } from "react";
 
-// Server action that handles the POST request
-export async function createBook(formData) {
-  "use server";
-  
-  const id = formData.get("id");
-  const title = formData.get("title");
-  const author = formData.get("author");
-  const publicationYear = Number(formData.get("publicationYear"));
+export default function AdminTable({ initialBooks }) {
+  const [books, setBooks] = useState(initialBooks);
 
-  await fetch("http://localhost:4000/books", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ id, title, author, publicationYear })
-  });
+  async function handleDelete(id) {
+    await fetch(`http://localhost:4000/books/${id}`, { method: "DELETE" });
+    // Filter out the deleted book from local state so the UI updates
+    setBooks((prev) => prev.filter((book) => book.id !== id));
+  }
 
-  redirect("/admin");
-}
-
-export default function CreatePage() {
   return (
-    <div>
-      <h1>Create Book</h1>
-      <form action={createBook}>
-        <input type="text" name="id" placeholder="Book ID" required />
-        <input type="text" name="title" placeholder="Book Title" required />
-        <input type="text" name="author" placeholder="Author" required />
-        <input type="number" name="publicationYear" placeholder="Publication Year" required />
-        <button type="submit">Submit</button>
-      </form>
-    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Title</th>
+          <th>Author</th>
+          <th>Year</th>
+          <th>Delete</th>
+        </tr>
+      </thead>
+      <tbody>
+        {books.map((book) => (
+          <tr key={book.id}>
+            <td>{book.id}</td>
+            <td>{book.title}</td>
+            <td>{book.author}</td>
+            <td>{book.publicationYear}</td>
+            <td>
+              <button onClick={() => handleDelete(book.id)}>Delete</button>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
   );
 }
