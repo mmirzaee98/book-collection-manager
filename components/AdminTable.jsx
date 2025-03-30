@@ -3,6 +3,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link"; // Make sure to import Link
 
 export default function AdminTable({ initialBooks }) {
   const [books, setBooks] = useState(initialBooks);
@@ -36,18 +37,30 @@ export default function AdminTable({ initialBooks }) {
         </tr>
       </thead>
       <tbody>
-        {books.map((book) => (
-          <tr key={book.id}>
+        {books.map((book, index) => (
+          <tr key={`${book.id}-${index}`}>
             <td style={{ padding: "0.5rem", borderBottom: "1px solid #eee" }}>{book.title}</td>
             <td style={{ padding: "0.5rem", borderBottom: "1px solid #eee" }}>{book.author}</td>
             <td style={{ padding: "0.5rem", borderBottom: "1px solid #eee" }}>{book.publicationYear}</td>
             <td style={{ padding: "0.5rem", borderBottom: "1px solid #eee" }}>
-              <button onClick={() => handleDelete(book.id)} style={{ backgroundColor: "#ff4d4d", color: "#fff", border: "none", padding: "0.3rem 0.6rem", borderRadius: "4px", cursor: "pointer" }}>
+              <button
+                onClick={() => handleDelete(book.id)}
+                style={{
+                  backgroundColor: "#ff4d4d",
+                  color: "#fff",
+                  border: "none",
+                  padding: "0.3rem 0.6rem",
+                  borderRadius: "4px",
+                  cursor: "pointer",
+                }}
+              >
                 Delete
               </button>
             </td>
             <td style={{ padding: "0.5rem", borderBottom: "1px solid #eee" }}>
-              <a href={`/admin/edit/${book.id}`} style={{ color: "#0070f3", textDecoration: "none" }}>Edit</a>
+              <Link href={`/admin/edit/${book.id}`} style={{ color: "#0070f3", textDecoration: "none" }}>
+                Edit
+              </Link>
             </td>
           </tr>
         ))}
